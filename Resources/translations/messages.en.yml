@@ -1,0 +1,13 @@
+chaplean_rest_client:
+    email:
+        request_executed_notification:
+            subject: 'RestClientBundle - Request Notification'
+            body:
+                header: 'RestClientBundle request executed notification'
+                footer: 'Have a good day'
+                request_header: 'The request'
+                request_body: 'with the content:'
+                succeeded: 'ran successfully.'
+                failed:  'failed.'
+                response_header: 'The response status code was'
+                response_body: 'with the content:'

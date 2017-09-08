@@ -1,0 +1,48 @@
+{
+    "name": "chaplean/rest-client-bundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "description": "Create a Restful API Client quickly",
+    "authors": [
+        {
+            "name": "Chaplean",
+            "homepage": "http://www.chaplean.coop"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Chaplean\\Bundle\\RestClientBundle\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Chaplean\\Bundle\\RestClientBundle\\": "Tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.0.8",
+        "eightpoints/guzzle-bundle": "^5.3 || ^6.0",
+        "symfony/config": "^2.8 || ^3.0 || ^4.0",
+        "symfony/console": "^2.8 || ^3.0 || ^4.0",
+        "symfony/dependency-injection": "^2.8 || ^3.0 || ^4.0",
+        "symfony/yaml": "^2.8 || ^3.0 || ^4.0"
+    },
+    "require-dev": {
+        "chaplean/codeship-scripts": "^1.0",
+        "chaplean/coding-standard": "^1.1",
+        "doctrine/doctrine-bundle": "^1.4",
+        "doctrine/orm": "^2.4.8",
+        "friendsofsymfony/rest-bundle": "^2.0",
+        "mockery/mockery": "dev-master",
+        "phpunit/phpunit": "^6.3",
+        "satooshi/php-coveralls": "dev-master",
+        "symfony/http-kernel": "^2.8 || ^3.0 || ^4.0",
+        "symfony/swiftmailer-bundle": "^2.3 || ^3.0",
+        "symfony/var-dumper": "^2.8 || ^3.0 || ^4.0"
+    },
+    "config": {
+        "bin-dir": "bin",
+        "discard-changes": true,
+        "sort-packages": true
+    }
+}
