@@ -46,6 +46,7 @@ class DateTimeParameterTest extends TestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter\DateTimeParameter::__construct()
      * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter\DateTimeParameter::parameterToArray()
      *
      * @return void
@@ -65,6 +66,7 @@ class DateTimeParameterTest extends TestCase
 
     /**
      * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter::dateTime()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter\DateTimeParameter::__construct()
      *
      * @return void
      */
