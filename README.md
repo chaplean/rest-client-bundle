@@ -222,7 +222,7 @@ public function buildApi()
         ->requestParameters(
             [
                 'name'     => Parameter::string(),
-                'birthday' => Parameter::dateTime(),
+                'birthday' => Parameter::dateTime('Y-m-d'),
                 'is_human' => Parameter::bool()->defaultValue(true),
                 'height'   => Parameter::int(),
                 'weight'   => Parameter::float()->optional(),

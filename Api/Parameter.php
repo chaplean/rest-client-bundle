@@ -3,6 +3,7 @@
 namespace Chaplean\Bundle\RestClientBundle\Api;
 
 use Chaplean\Bundle\RestClientBundle\Api\Constraint\CallbackConstraint;
+use Chaplean\Bundle\RestClientBundle\Api\Parameter\DateTimeParameter;
 use Chaplean\Bundle\RestClientBundle\Api\ParameterConstraintViolation\InvalidTypeViolation;
 use Chaplean\Bundle\RestClientBundle\Api\ParameterConstraintViolation\MissingParameterViolation;
 use Chaplean\Bundle\RestClientBundle\Api\Parameter\ArrayParameter;
@@ -272,21 +273,13 @@ class Parameter
     /**
      * Construct a Parameter configured to be an id (integer)
      *
+     * @param string $format Optional: How to format the field when sending the request
+     *
      * @return Parameter
      */
-    public static function dateTime()
+    public static function dateTime($format = 'Y-m-d')
     {
-        $param = new Parameter();
-
-        $param->addConstraint(function($value, ParameterConstraintViolationCollection $violations) {
-            if ($value === null) {
-                $violations->add(new MissingParameterViolation(''));
-            } else if (!$value instanceof \DateTime) {
-                $violations->add(new InvalidTypeViolation($value, \DateTime::class));
-            }
-        });
-
-        return $param;
+        return new DateTimeParameter($format);
     }
 
     /**

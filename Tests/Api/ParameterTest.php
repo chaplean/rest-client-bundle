@@ -385,23 +385,6 @@ class ParameterTest extends TestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter::dateTime()
-     *
-     * @return void
-     */
-    public function testDateTime()
-    {
-        $parameter = Parameter::dateTime();
-        $parameter->setValue(new \DateTime());
-
-        $this->assertTrue($parameter->isValid());
-
-        $parameter->setValue(42);
-
-        $this->assertFalse($parameter->isValid());
-    }
-
-    /**
      * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter::int()
      * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter::optional()
      * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter::isValid()
