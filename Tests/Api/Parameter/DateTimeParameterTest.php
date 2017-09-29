@@ -3,7 +3,6 @@
 namespace Tests\Chaplean\Bundle\RestClientBundle\Api\Parameter;
 
 use Chaplean\Bundle\RestClientBundle\Api\Parameter;
-use Chaplean\Bundle\RestClientBundle\Api\Parameter\DateTimeParameter;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -17,16 +16,6 @@ use PHPUnit\Framework\TestCase;
  */
 class DateTimeParameterTest extends TestCase
 {
-    /**
-     * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter::dateTime()
-     *
-     * @return void
-     */
-    public function testBuilder()
-    {
-        $this->assertInstanceOf(DateTimeParameter::class, Parameter::dateTime());
-    }
-
     /**
      * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter\DateTimeParameter::parameterToArray()
      *
@@ -65,7 +54,6 @@ class DateTimeParameterTest extends TestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter::dateTime()
      * @covers \Chaplean\Bundle\RestClientBundle\Api\Parameter\DateTimeParameter::__construct()
      *
      * @return void
