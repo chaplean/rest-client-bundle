@@ -26,10 +26,14 @@ class GlobalParametersTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var ClientInterface */
+    /**
+     * @var ClientInterface
+     */
     protected $client;
 
-    /** @var EventDispatcherInterface */
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
     /**

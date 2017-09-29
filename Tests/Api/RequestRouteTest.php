@@ -25,10 +25,14 @@ class RequestRouteTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var Client */
+    /**
+     * @var Client
+     */
     protected $client;
 
-    /** @var EventDispatcherInterface */
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
     /**

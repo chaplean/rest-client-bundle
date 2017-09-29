@@ -15,7 +15,9 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class RequestExecutedEvent extends Event
 {
-    /** @var ResponseInterface */
+    /**
+     * @var ResponseInterface
+     */
     protected $response;
 
     /**

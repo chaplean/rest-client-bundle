@@ -14,10 +14,14 @@ use Chaplean\Bundle\RestClientBundle\Api\ParameterConstraintViolation;
  */
 class InvalidTypeViolation extends ParameterConstraintViolation
 {
-    /** @var mixed */
+    /**
+     * @var mixed
+     */
     protected $value;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $expectedType;
 
     /**

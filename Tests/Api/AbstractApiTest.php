@@ -20,7 +20,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class AbstractApiTest extends TestCase
 {
-    /** @var EventDispatcher*/
+    /**
+     * @var EventDispatcher
+     */
     protected $eventDispatcher;
 
     /**

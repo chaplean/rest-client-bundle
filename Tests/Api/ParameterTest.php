@@ -3,6 +3,7 @@
 namespace Tests\Chaplean\Bundle\RestClientBundle\Api;
 
 use Chaplean\Bundle\RestClientBundle\Api\Parameter;
+use Chaplean\Bundle\RestClientBundle\Api\Parameter\DateTimeParameter;
 use Chaplean\Bundle\RestClientBundle\Api\ParameterConstraintViolation\MissingParameterViolation;
 use PHPUnit\Framework\TestCase;
 
@@ -391,14 +392,7 @@ class ParameterTest extends TestCase
      */
     public function testDateTime()
     {
-        $parameter = Parameter::dateTime();
-        $parameter->setValue(new \DateTime());
-
-        $this->assertTrue($parameter->isValid());
-
-        $parameter->setValue(42);
-
-        $this->assertFalse($parameter->isValid());
+        $this->assertInstanceOf(DateTimeParameter::class, Parameter::dateTime());
     }
 
     /**

@@ -14,7 +14,9 @@ use Chaplean\Bundle\RestClientBundle\Api\ParameterConstraintViolation;
  */
 class ExtraDataViolation extends ParameterConstraintViolation
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $keys;
 
     /**

@@ -19,10 +19,14 @@ use Doctrine\ORM\EntityManager;
  */
 class RestLogUtility
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $parameters;
 
-    /** @var EntityManager */
+    /**
+     * @var EntityManager
+     */
     protected $em;
 
     /**
