@@ -16,16 +16,24 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class EmailUtility
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $parameters;
 
-    /** @var \Swift_Mailer */
+    /**
+     * @var \Swift_Mailer
+     */
     protected $mailer;
 
-    /** @var TranslatorInterface */
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
 
-    /** @var TwigEngine */
+    /**
+     * @var TwigEngine
+     */
     protected $templating;
 
     /**

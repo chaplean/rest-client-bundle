@@ -23,10 +23,14 @@ class RequestExecutedListenerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var RestLogUtility */
+    /**
+     * @var RestLogUtility
+     */
     protected $restLogUtility;
 
-    /** @var EmailUtility */
+    /**
+     * @var EmailUtility
+     */
     protected $emailUtility;
 
     /**

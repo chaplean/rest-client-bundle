@@ -23,13 +23,19 @@ use Chaplean\Bundle\RestClientBundle\Exception\RequiredParametersOneOfException;
  */
 class ObjectParameter extends Parameter
 {
-    /** @var Parameter[] */
+    /**
+     * @var array|Parameter[]
+     */
     protected $requireAtLeastParameters;
 
-    /** @var Parameter[] */
+    /**
+     * @var array|Parameter[]
+     */
     protected $requireExactlyParameters;
 
-    /** @var Parameter[] */
+    /**
+     * @var array|Parameter[]
+     */
     protected $parameters;
 
     /**

@@ -33,10 +33,14 @@ class RouteTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var MockInterface */
+    /**
+     * @var MockInterface
+     */
     protected $client;
 
-    /** @var EventDispatcherInterface */
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
     /**

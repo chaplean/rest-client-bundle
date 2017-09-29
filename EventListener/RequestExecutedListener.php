@@ -17,10 +17,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RequestExecutedListener implements EventSubscriberInterface
 {
-    /** @var RestLogUtility */
+    /**
+     * @var RestLogUtility
+     */
     protected $restLogUtility;
 
-    /** @var EmailUtility */
+    /**
+     * @var EmailUtility
+     */
     protected $emailUtility;
 
     /**
