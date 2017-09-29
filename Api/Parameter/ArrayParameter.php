@@ -18,7 +18,9 @@ use Chaplean\Bundle\RestClientBundle\Api\ParameterConstraintViolation\NotArrayVi
  */
 class ArrayParameter extends Parameter
 {
-    /** @var Parameter */
+    /**
+     * @var Parameter
+     */
     protected $parameter;
 
     /**

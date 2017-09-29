@@ -3,7 +3,6 @@
 namespace Tests\Chaplean\Bundle\RestClientBundle\Api\Parameter;
 
 use Chaplean\Bundle\RestClientBundle\Api\Parameter;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,7 +26,7 @@ class DateTimeParameterTest extends TestCase
             'date' => Parameter::dateTime(),
         ]);
 
-        $date = new DateTime();
+        $date = new \DateTime();
         $parameter->setValue(['date' => $date]);
 
         $result = $parameter->toArray();
@@ -46,7 +45,7 @@ class DateTimeParameterTest extends TestCase
             'date' => Parameter::dateTime('d-m-Y'),
         ]);
 
-        $date = new DateTime();
+        $date = new \DateTime();
         $parameter->setValue(['date' => $date]);
 
         $result = $parameter->toArray();

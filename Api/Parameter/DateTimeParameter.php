@@ -17,7 +17,9 @@ use Chaplean\Bundle\RestClientBundle\Api\ParameterConstraintViolationCollection;
  */
 class DateTimeParameter extends Parameter
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $format;
 
     /**

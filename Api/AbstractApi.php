@@ -16,16 +16,24 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class AbstractApi
 {
-    /** @var null|RequestRoute */
+    /**
+     * @var null|RequestRoute
+     */
     protected $globalRoute = null;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $routes = [];
 
-    /** @var ClientInterface */
+    /**
+     * @var ClientInterface
+     */
     protected $client;
 
-    /** @var EventDispatcherInterface */
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
     /**

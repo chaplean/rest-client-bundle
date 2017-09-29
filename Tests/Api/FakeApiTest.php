@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FakeApiTest extends TestCase
 {
+    /**
+     * @var FakeApi
+     */
     protected $api;
 
     /**
