@@ -2,7 +2,7 @@
 
 namespace Chaplean\Bundle\RestClientBundle\Api\Response\Failure;
 
-use Chaplean\Bundle\RestClientBundle\Api\ResponseInterface;
+use Chaplean\Bundle\RestClientBundle\Api\AbstractResponse;
 
 /**
  * Class Response.
@@ -12,7 +12,7 @@ use Chaplean\Bundle\RestClientBundle\Api\ResponseInterface;
  * @copyright 2014 - 2017 Chaplean (http://www.chaplean.coop)
  * @since     3.0.0
  */
-abstract class AbstractFailureResponse implements ResponseInterface
+abstract class AbstractFailureResponse extends AbstractResponse
 {
     protected $method;
     protected $url;
@@ -27,6 +27,8 @@ abstract class AbstractFailureResponse implements ResponseInterface
      */
     public function __construct($method, $url, array $data)
     {
+        parent::__construct();
+
         $this->method = $method;
         $this->url = $url;
         $this->data = $data;

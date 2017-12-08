@@ -4,6 +4,7 @@ namespace Tests\Chaplean\Bundle\RestClientBundle\Api;
 
 use Chaplean\Bundle\RestClientBundle\Api\GlobalParameters;
 use Chaplean\Bundle\RestClientBundle\Api\Parameter;
+use Chaplean\Bundle\RestClientBundle\Api\Response\Failure\AbstractFailureResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Failure\InvalidParameterResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Failure\RequestFailedResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\AbstractSuccessResponse;
@@ -387,5 +388,21 @@ class RouteTest extends TestCase
         $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
 
         $this->assertInstanceOf(AbstractSuccessResponse::class, $route->exec());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::sendRequest()
+     *
+     * @return void
+     */
+    public function testRequestWithRequestExceptionAndNoResponse()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->client->shouldReceive('request')->once()->andThrow(RequestException::create(new \GuzzleHttp\Psr7\Request('test', 'get')));
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+
+        $this->assertInstanceOf(AbstractFailureResponse::class, $route->exec());
     }
 }

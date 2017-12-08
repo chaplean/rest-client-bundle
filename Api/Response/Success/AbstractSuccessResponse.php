@@ -2,8 +2,8 @@
 
 namespace Chaplean\Bundle\RestClientBundle\Api\Response\Success;
 
+use Chaplean\Bundle\RestClientBundle\Api\AbstractResponse;
 use Chaplean\Bundle\RestClientBundle\Api\ParameterConstraintViolationCollection;
-use Chaplean\Bundle\RestClientBundle\Api\ResponseInterface;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -14,7 +14,7 @@ use GuzzleHttp\Psr7\Response;
  * @copyright 2014 - 2017 Chaplean (http://www.chaplean.coop)
  * @since     3.0.0
  */
-abstract class AbstractSuccessResponse implements ResponseInterface
+abstract class AbstractSuccessResponse extends AbstractResponse
 {
     protected $code;
     protected $headers;
@@ -33,6 +33,8 @@ abstract class AbstractSuccessResponse implements ResponseInterface
      */
     public function __construct(Response $response, $method, $url, array $data)
     {
+        parent::__construct();
+
         $this->code = $response->getStatusCode();
         $this->headers = $response->getHeaders();
         $this->body = $response->getBody();

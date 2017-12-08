@@ -237,7 +237,12 @@ class Route
 
             return new $responseClass($response, $this->method, $url, $options);
         } catch (RequestException $e) {
-            return new $responseClass($e->getResponse(), $this->method, $url, $options);
+            $response = $e->getResponse();
+            if ($response === null) {
+                return new RequestFailedResponse($e, $this->method, $url, $options);
+            }
+
+            return new $responseClass($response, $this->method, $url, $options);
         } catch (TransferException $e) {
             return new RequestFailedResponse($e, $this->method, $url, $options);
         }
