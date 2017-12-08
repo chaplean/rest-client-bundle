@@ -66,7 +66,7 @@ class RestLog
     /**
      * @var string
      *
-     * @ORM\Column(type="string", nullable=false, name="response_uuid")
+     * @ORM\Column(type="string", nullable=true, name="response_uuid")
      */
     private $responseUuid;
 
