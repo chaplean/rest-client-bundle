@@ -29,43 +29,29 @@ class RestLogUtilityTest extends MockeryTestCase
     public function testLogRequestInDatabaseIfEnabled()
     {
         $methodType = new RestMethodType();
-        $this->restMethodRepo = \Mockery::mock(EntityRepository::class);
-        $this->restMethodRepo->shouldReceive('findOneBy')
-            ->once()
-            ->with(['keyname' => 'get'])
-            ->andReturn($methodType);
+        $restMethodRepo = \Mockery::mock(EntityRepository::class);
+        $restMethodRepo->shouldReceive('findOneBy')->once()->with(['keyname' => 'get'])->andReturn($methodType);
 
         $statusCodeType = new RestStatusCodeType();
-        $this->restStatusCodeRepo = \Mockery::mock(EntityRepository::class);
-        $this->restStatusCodeRepo->shouldReceive('findOneBy')
-            ->once()
-            ->with(['code' => 200])
-            ->andReturn($statusCodeType);
+        $restStatusCodeRepo = \Mockery::mock(EntityRepository::class);
+        $restStatusCodeRepo->shouldReceive('findOneBy')->once()->with(['code' => 200])->andReturn($statusCodeType);
 
-        $this->em = \Mockery::mock(EntityManager::class);
-        $this->em->shouldReceive('getRepository')
-            ->once()
-            ->with(RestMethodType::class)
-            ->andReturn($this->restMethodRepo);
+        $em = \Mockery::mock(EntityManager::class);
+        $em->shouldReceive('getRepository')->once()->with(RestMethodType::class)->andReturn($restMethodRepo);
 
-        $this->em->shouldReceive('getRepository')
-            ->once()
-            ->with(RestStatusCodeType::class)
-            ->andReturn($this->restStatusCodeRepo);
+        $em->shouldReceive('getRepository')->once()->with(RestStatusCodeType::class)->andReturn($restStatusCodeRepo);
 
-        $this->em->shouldReceive('persist')->once();
-        $this->em->shouldReceive('flush')->once();
+        $em->shouldReceive('persist')->once();
+        $em->shouldReceive('flush')->once();
 
-        $this->registry = \Mockery::mock(Registry::class);
-        $this->registry->shouldReceive('getManager')
-            ->once()
-            ->andReturn($this->em);
+        $registry = \Mockery::mock(Registry::class);
+        $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
             'enable_database_logging' => true,
         ];
 
-        $utility = new RestLogUtility($config, $this->registry);
+        $utility = new RestLogUtility($config, $registry);
         $utility->logResponse(new PlainResponse(new Response(200, [], ''), 'get', 'url', []));
     }
 
@@ -78,43 +64,29 @@ class RestLogUtilityTest extends MockeryTestCase
     public function testLogRequestInDatabaseWithUnknownStatusCode()
     {
         $methodType = new RestMethodType();
-        $this->restMethodRepo = \Mockery::mock(EntityRepository::class);
-        $this->restMethodRepo->shouldReceive('findOneBy')
-            ->once()
-            ->with(['keyname' => 'get'])
-            ->andReturn($methodType);
+        $restMethodRepo = \Mockery::mock(EntityRepository::class);
+        $restMethodRepo->shouldReceive('findOneBy')->once()->with(['keyname' => 'get'])->andReturn($methodType);
 
         $statusCodeType = new RestStatusCodeType();
-        $this->restStatusCodeRepo = \Mockery::mock(EntityRepository::class);
-        $this->restStatusCodeRepo->shouldReceive('findOneBy')
-            ->once()
-            ->with(['code' => 418])
-            ->andReturn($statusCodeType);
+        $restStatusCodeRepo = \Mockery::mock(EntityRepository::class);
+        $restStatusCodeRepo->shouldReceive('findOneBy')->once()->with(['code' => 418])->andReturn($statusCodeType);
 
-        $this->em = \Mockery::mock(EntityManager::class);
-        $this->em->shouldReceive('getRepository')
-            ->once()
-            ->with(RestMethodType::class)
-            ->andReturn($this->restMethodRepo);
+        $em = \Mockery::mock(EntityManager::class);
+        $em->shouldReceive('getRepository')->once()->with(RestMethodType::class)->andReturn($restMethodRepo);
 
-        $this->em->shouldReceive('getRepository')
-            ->once()
-            ->with(RestStatusCodeType::class)
-            ->andReturn($this->restStatusCodeRepo);
+        $em->shouldReceive('getRepository')->once()->with(RestStatusCodeType::class)->andReturn($restStatusCodeRepo);
 
-        $this->em->shouldReceive('persist')->once();
-        $this->em->shouldReceive('flush')->once();
+        $em->shouldReceive('persist')->once();
+        $em->shouldReceive('flush')->once();
 
-        $this->registry = \Mockery::mock(Registry::class);
-        $this->registry->shouldReceive('getManager')
-            ->once()
-            ->andReturn($this->em);
+        $registry = \Mockery::mock(Registry::class);
+        $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
             'enable_database_logging' => true,
         ];
 
-        $utility = new RestLogUtility($config, $this->registry);
+        $utility = new RestLogUtility($config, $registry);
 
         $utility->logResponse(new PlainResponse(new Response(418, [], ''), 'get', 'url', []));
     }
@@ -127,18 +99,16 @@ class RestLogUtilityTest extends MockeryTestCase
      */
     public function testDontLogRequestInDatabaseIfDisabled()
     {
-        $this->em = \Mockery::mock(EntityManager::class);
+        $em = \Mockery::mock(EntityManager::class);
 
-        $this->registry = \Mockery::mock(Registry::class);
-        $this->registry->shouldReceive('getManager')
-            ->once()
-            ->andReturn($this->em);
+        $registry = \Mockery::mock(Registry::class);
+        $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
             'enable_database_logging' => false,
         ];
 
-        $utility = new RestLogUtility($config, $this->registry);
+        $utility = new RestLogUtility($config, $registry);
 
         $utility->logResponse(new PlainResponse(new Response(200, [], ''), 'get', 'url', []));
     }

@@ -62,4 +62,12 @@ interface ResponseInterface
      * @return ParameterConstraintViolationCollection|null
      */
     public function getViolations();
+
+    /**
+     * Return an unique identifier
+     * Use for logging request call
+     *
+     * @return string
+     */
+    public function getUuid();
 }

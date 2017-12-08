@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="cl_rest_log", indexes={@ORM\Index(name="api_log_url_INDEX", columns={"url"})})
+ * @ORM\Table(name="cl_rest_log", indexes={@ORM\Index(name="rest_log_url_INDEX", columns={"url"})})
  */
 class RestLog
 {
@@ -62,6 +62,13 @@ class RestLog
      * @ORM\JoinColumn(name="rest_status_code_type_id", referencedColumnName="id", onDelete="RESTRICT")
      */
     private $statusCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=false, name="response_uuid")
+     */
+    private $responseUuid;
 
     /**
      * Get id.
@@ -213,6 +220,26 @@ class RestLog
     public function setStatusCode(RestStatusCodeType $statusCode)
     {
         $this->statusCode = $statusCode;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResponseUuid()
+    {
+        return $this->responseUuid;
+    }
+
+    /**
+     * @param string $responseUuid
+     *
+     * @return self
+     */
+    public function setResponseUuid($responseUuid)
+    {
+        $this->responseUuid = $responseUuid;
 
         return $this;
     }
