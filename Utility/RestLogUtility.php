@@ -34,6 +34,8 @@ class RestLogUtility
      *
      * @param array    $parameters
      * @param Registry $registry
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $parameters, Registry $registry = null)
     {
@@ -64,7 +66,7 @@ class RestLogUtility
         $methodName = $response->getMethod();
         $codeNumber = $response->getCode();
 
-        $method = $this->em->getRepository(RestMethodType::class)->findOneBy(['keyname' => $methodName]);
+        $method = $this->em->getRepository(RestMethodType::class)->findOneBy(['keyname' => strtolower($methodName)]);
         $statusCode = $this->em->getRepository(RestStatusCodeType::class)->findOneBy(['code' => $codeNumber]);
 
         $restLog = new RestLog();
@@ -72,6 +74,7 @@ class RestLogUtility
         $restLog->setDataSended($response->getData());
         $restLog->setDataReceived($response->getContent());
         $restLog->setDateAdd(new \DateTime());
+        $restLog->setResponseUuid($response->getUuid());
 
         if ($method) {
             $restLog->setMethod($method);
@@ -82,6 +85,6 @@ class RestLogUtility
         }
 
         $this->em->persist($restLog);
-        $this->em->flush();
+        $this->em->flush($restLog);
     }
 }
