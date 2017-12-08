@@ -31,6 +31,8 @@ class RestLogTest extends TestCase
      * @covers \Chaplean\Bundle\RestClientBundle\Entity\RestLog::setMethod()
      * @covers \Chaplean\Bundle\RestClientBundle\Entity\RestLog::getStatusCode()
      * @covers \Chaplean\Bundle\RestClientBundle\Entity\RestLog::setStatusCode()
+     * @covers \Chaplean\Bundle\RestClientBundle\Entity\RestLog::getResponseUuid()
+     * @covers \Chaplean\Bundle\RestClientBundle\Entity\RestLog::setResponseUuid()
      *
      * @return void
      */
@@ -46,6 +48,7 @@ class RestLogTest extends TestCase
         $log->setDateAdd(new \DateTime('today'));
         $log->setMethod($method);
         $log->setStatusCode($statusCode);
+        $log->setResponseUuid('foo');
 
         $this->assertNull($log->getId());
         $this->assertEquals('url', $log->getUrl());
@@ -54,5 +57,6 @@ class RestLogTest extends TestCase
         $this->assertEquals(new \DateTime('today'), $log->getDateAdd());
         $this->assertEquals($method, $log->getMethod());
         $this->assertEquals($statusCode, $log->getStatusCode());
+        $this->assertEquals('foo', $log->getResponseUuid());
     }
 }
