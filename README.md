@@ -19,7 +19,7 @@ composer require chaplean/rest-client-bundle
 
 Add
 ```php
-new EightPoints\Bundle\GuzzleBundle\GuzzleBundle(),
+new EightPoints\Bundle\GuzzleBundle\EightPointsGuzzleBundle(),
 new Chaplean\Bundle\RestClientBundle\ChapleanRestClientBundle(),
 
 // If you want to enable Database logging
@@ -33,12 +33,12 @@ new Symfony\Bundle\TwigBundle\TwigBundle()
 ## 3. config.yml and parameters.yml
 
 First you will need to configure guzzlehttp that we use under the hood to perform the actual http
-requests. See the [bundle](https://github.com/8p/GuzzleBundle) documentation or the [library](http://docs.guzzlephp.org/en/latest/request-options.html) documentation for full range
+requests. See the [bundle](https://github.com/8p/EightPointsGuzzleBundle) documentation or the [library](http://docs.guzzlephp.org/en/latest/request-options.html) documentation for full range
 of options. Example:
 
 config.yml
 ```yaml
-guzzle:
+eight_points_guzzle:
     logging: true
     clients:
         fake_api:
