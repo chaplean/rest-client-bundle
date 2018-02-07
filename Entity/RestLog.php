@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    name="cl_rest_log",
  *    indexes={
  *      @ORM\Index(name="rest_log_url_INDEX", columns={"url"}),
- *      @ORM\Index(name="rest_log_response_uuid_INDEX", columns={"responseUuid"})
+ *      @ORM\Index(name="rest_log_response_uuid_INDEX", columns={"response_uuid"})
  *    }
  * )
  */
