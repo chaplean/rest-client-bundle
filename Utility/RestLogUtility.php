@@ -6,6 +6,7 @@ use Chaplean\Bundle\RestClientBundle\Api\ResponseInterface;
 use Chaplean\Bundle\RestClientBundle\Entity\RestLog;
 use Chaplean\Bundle\RestClientBundle\Entity\RestMethodType;
 use Chaplean\Bundle\RestClientBundle\Entity\RestStatusCodeType;
+use Chaplean\Bundle\RestClientBundle\Query\RestLogQuery;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 
@@ -25,6 +26,11 @@ class RestLogUtility
     protected $parameters;
 
     /**
+     * @var RestLogQuery
+     */
+    protected $restLogQuery;
+
+    /**
      * @var EntityManager
      */
     protected $em;
@@ -32,14 +38,16 @@ class RestLogUtility
     /**
      * RestLogUtility constructor.
      *
-     * @param array    $parameters
-     * @param Registry $registry
+     * @param array        $parameters
+     * @param RestLogQuery $restLogQuery
+     * @param Registry     $registry
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $parameters, Registry $registry = null)
+    public function __construct(array $parameters, RestLogQuery $restLogQuery, Registry $registry = null)
     {
         $this->parameters = $parameters;
+        $this->restLogQuery = $restLogQuery;
 
         if ($registry === null) {
             if ($this->parameters['enable_database_logging']) {
@@ -66,7 +74,9 @@ class RestLogUtility
         $methodName = $response->getMethod();
         $codeNumber = $response->getCode();
 
+        /** @var RestMethodType|null $method */
         $method = $this->em->getRepository(RestMethodType::class)->findOneBy(['keyname' => strtolower($methodName)]);
+        /** @var RestStatusCodeType|null $statusCode */
         $statusCode = $this->em->getRepository(RestStatusCodeType::class)->findOneBy(['code' => $codeNumber]);
 
         $restLog = new RestLog();
@@ -86,5 +96,32 @@ class RestLogUtility
 
         $this->em->persist($restLog);
         $this->em->flush($restLog);
+    }
+
+    /**
+     * Persists in database a log entity representing the given $response.
+     *
+     * @param \DateTime $dateTime
+     *
+     * @return integer
+     */
+    public function deleteMostRecentThan(\DateTime $dateTime)
+    {
+        $restLogDeleted = 0;
+
+        $query = $this->restLogQuery->createFindIdsMostRecentThan($dateTime);
+        $idsToRemove = array_map(function($data) {
+            return $data['id'];
+        }, $query->getResult());
+
+        foreach ($idsToRemove as $id) {
+            try {
+                $queryRemove = $this->restLogQuery->createDeleteById($id);
+                $queryRemove->execute();
+                $restLogDeleted ++;
+            } catch (\Exception $e){};
+        }
+
+        return $restLogDeleted;
     }
 }
