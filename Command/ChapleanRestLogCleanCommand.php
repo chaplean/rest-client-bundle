@@ -24,7 +24,7 @@ class ChapleanRestLogCleanCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('chaplean:rest-log:clean');
-        $this->setDescription('Delete logs more than a month');
+        $this->setDescription('Delete logs older than one month');
     }
 
     /**
