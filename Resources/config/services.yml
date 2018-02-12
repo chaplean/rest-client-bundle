@@ -7,11 +7,17 @@ services:
         tags:
           - { name: kernel.event_subscriber, connection: default }
 
+    chaplean_rest_client.query.rest_log:
+        class: Chaplean\Bundle\RestClientBundle\Query\RestLogQuery
+        arguments:
+          - '@?doctrine'
+
     chaplean_rest_client.utility.rest_log:
         class: Chaplean\Bundle\RestClientBundle\Utility\RestLogUtility
         arguments:
           - '%chaplean_rest_client.config%'
           - '@?doctrine'
+          - '@chaplean_rest_client.query.rest_log'
 
     chaplean_rest_client.utility.email:
         class: Chaplean\Bundle\RestClientBundle\Utility\EmailUtility
