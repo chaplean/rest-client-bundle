@@ -8,6 +8,7 @@ use Chaplean\Bundle\RestClientBundle\Api\Response\Failure\AbstractFailureRespons
 use Chaplean\Bundle\RestClientBundle\Api\Response\Failure\InvalidParameterResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Failure\RequestFailedResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\AbstractSuccessResponse;
+use Chaplean\Bundle\RestClientBundle\Api\Response\Success\BinaryResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\JsonResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\PlainResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\XmlResponse;
@@ -372,6 +373,28 @@ class RouteTest extends TestCase
         $route->expectsPlain();
 
         $this->assertInstanceOf(PlainResponse::class, $route->exec());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::expectsBinary()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::__construct()
+     *
+     * @return void
+     */
+    public function testExpectsBinary()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with('GET', 'url', ['headers' => [], 'query' => []])
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->expectsBinary();
+
+        $this->assertInstanceOf(BinaryResponse::class, $route->exec());
     }
 
     /**

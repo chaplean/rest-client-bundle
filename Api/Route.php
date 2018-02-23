@@ -33,6 +33,7 @@ class Route
     protected $queryParameters;
     protected $headers;
 
+    const RESPONSE_BINARY = 'Binary';
     const RESPONSE_PLAIN = 'Plain';
     const RESPONSE_JSON = 'Json';
     const RESPONSE_XML = 'Xml';
@@ -75,6 +76,18 @@ class Route
         $this->bindUrlParameters([]);
         $this->bindQueryParameters([]);
         $this->bindHeaders([]);
+    }
+
+    /**
+     * Configure the route to expect a binary response (which is the default)
+     *
+     * @return self
+     */
+    public function expectsBinary()
+    {
+        $this->responseType = self::RESPONSE_BINARY;
+
+        return $this;
     }
 
     /**
