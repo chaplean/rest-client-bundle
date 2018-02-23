@@ -51,6 +51,18 @@ class GlobalParameters
     }
 
     /**
+     * Configure the route to expect a binary response (which is the default)
+     *
+     * @return self
+     */
+    public function expectsBinary()
+    {
+        $this->responseType = Route::RESPONSE_BINARY;
+
+        return $this;
+    }
+
+    /**
      * Configure the route to expect a plain text response (which is the default)
      *
      * @return self

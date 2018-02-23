@@ -5,6 +5,7 @@ namespace Tests\Chaplean\Bundle\RestClientBundle\Api;
 use Chaplean\Bundle\RestClientBundle\Api\GlobalParameters;
 use Chaplean\Bundle\RestClientBundle\Api\Parameter;
 use Chaplean\Bundle\RestClientBundle\Api\RequestRoute;
+use Chaplean\Bundle\RestClientBundle\Api\Response\Success\BinaryResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\JsonResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\PlainResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\XmlResponse;
@@ -68,6 +69,28 @@ class GlobalParametersTest extends TestCase
             ->once();
 
         $this->assertInstanceOf(PlainResponse::class, $route->exec());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\GlobalParameters::expectsPlain()
+     *
+     * @return void
+     */
+    public function testGlobalParametersExpectBinary()
+    {
+        $globalParameter = new GlobalParameters();
+        $globalParameter->expectsBinary();
+        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with('POST', 'url', ['headers' => [], 'query' => [], 'form_params' => []])
+            ->andReturn(new Response());
+
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->assertInstanceOf(BinaryResponse::class, $route->exec());
     }
 
     /**
