@@ -29,11 +29,11 @@
     },
     "require-dev": {
         "chaplean/coding-standard": "^1.1",
-        "doctrine/doctrine-bundle": "^1.4",
-        "doctrine/orm": "^2.4.8",
+        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/orm": "^2.5",
         "friendsofsymfony/rest-bundle": "^2.0",
         "mockery/mockery": "dev-master",
-        "phpunit/phpunit": "^6.3",
+        "phpunit/phpunit": "^7.0",
         "symfony/http-kernel": "^2.8 || ^3.0 || ^4.0",
         "symfony/swiftmailer-bundle": "^2.3 || ^3.0",
         "symfony/var-dumper": "^2.8 || ^3.0 || ^4.0"
