@@ -1,4 +1,8 @@
 services:
+    _defaults:
+        autowire: true
+        public: true
+
     chaplean_rest_client.listener.request_executed:
         class: Chaplean\Bundle\RestClientBundle\EventListener\RequestExecutedListener
         arguments:
