@@ -36,6 +36,11 @@ class RestLogUtility
     protected $em;
 
     /**
+     * @var array|RestLog[]
+     */
+    protected $logs;
+
+    /**
      * RestLogUtility constructor.
      *
      * @param array        $parameters
@@ -56,6 +61,8 @@ class RestLogUtility
         } else {
             $this->em = $registry->getManager();
         }
+
+        $this->logs = [];
     }
 
     /**
@@ -94,8 +101,8 @@ class RestLogUtility
             $restLog->setStatusCode($statusCode);
         }
 
+        $this->logs[$response->getUuid()] = $restLog;
         $this->em->persist($restLog);
-        $this->em->flush($restLog);
     }
 
     /**
@@ -123,5 +130,17 @@ class RestLogUtility
         }
 
         return $restLogDeleted;
+    }
+
+    /**
+     * Returns the RestLog entity corresponding to the given $uuid. First search in memory for not yet flushed entity, then searches in the database.
+     *
+     * @param string $uuid
+     *
+     * @return RestLog|null
+     */
+    public function getLogByUuid($uuid)
+    {
+        return $this->logs[$uuid] ?? $this->em->getRepository(RestLog::class)->findOneByResponseUuid($uuid);
     }
 }

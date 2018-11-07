@@ -44,7 +44,7 @@ class RestLogUtilityTest extends MockeryTestCase
         $em->shouldReceive('getRepository')->once()->with(RestStatusCodeType::class)->andReturn($restStatusCodeRepo);
 
         $em->shouldReceive('persist')->once();
-        $em->shouldReceive('flush')->once();
+        $em->shouldNotReceive('flush');
 
         $restLogQuery = \Mockery::mock(RestLogQuery::class);
         $registry = \Mockery::mock(Registry::class);
@@ -80,7 +80,7 @@ class RestLogUtilityTest extends MockeryTestCase
         $em->shouldReceive('getRepository')->once()->with(RestStatusCodeType::class)->andReturn($restStatusCodeRepo);
 
         $em->shouldReceive('persist')->once();
-        $em->shouldReceive('flush')->once();
+        $em->shouldNotReceive('flush');
 
         $restLogQuery = \Mockery::mock(RestLogQuery::class);
         $registry = \Mockery::mock(Registry::class);
