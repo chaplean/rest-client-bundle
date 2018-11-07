@@ -3,6 +3,7 @@
 namespace Chaplean\Bundle\RestClientBundle\Utility;
 
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\PlainResponse;
+use Chaplean\Bundle\RestClientBundle\Entity\RestLog;
 use Chaplean\Bundle\RestClientBundle\Entity\RestMethodType;
 use Chaplean\Bundle\RestClientBundle\Entity\RestStatusCodeType;
 use Chaplean\Bundle\RestClientBundle\Query\RestLogQuery;
@@ -10,6 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -187,5 +189,73 @@ class RestLogUtilityTest extends MockeryTestCase
         $result = $utility->deleteMostRecentThan($date);
 
         $this->assertEquals(1, $result);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Utility\RestLogUtility::__construct()
+     * @covers \Chaplean\Bundle\RestClientBundle\Utility\RestLogUtility::getLogByUuid()
+     *
+     * @return void
+     */
+    public function testGetResponseByUuidWithoutStoredLogs()
+    {
+        $restLogQuery = \Mockery::mock(RestLogQuery::class);
+        $registry = \Mockery::mock(Registry::class);
+        $em = \Mockery::mock(EntityManager::class);
+        $repository = \Mockery::mock(EntityRepository::class);
+        $log = new RestLog();
+
+        $config = [
+            'enable_database_logging' => true,
+        ];
+
+        $registry->shouldReceive('getManager')->once()->andReturn($em);
+        $em->shouldReceive('getRepository')->andReturn($repository);
+        $repository->shouldReceive('findOneByResponseUuid')->with(42)->andReturn($log);
+
+        $utility = new RestLogUtility($config, $restLogQuery, $registry);
+        $this->assertEquals($log, $utility->getLogByUuid('42'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Utility\RestLogUtility::__construct()
+     * @covers \Chaplean\Bundle\RestClientBundle\Utility\RestLogUtility::getLogByUuid()
+     *
+     * @return void
+     */
+    public function testGetResponseByUuidWithStoredLogs()
+    {
+        $methodType = new RestMethodType();
+        $restMethodRepo = \Mockery::mock(EntityRepository::class);
+        $restMethodRepo->shouldReceive('findOneBy')->once()->with(['keyname' => 'get'])->andReturn($methodType);
+
+        $statusCodeType = new RestStatusCodeType();
+        $restStatusCodeRepo = \Mockery::mock(EntityRepository::class);
+        $restStatusCodeRepo->shouldReceive('findOneBy')->once()->with(['code' => 200])->andReturn($statusCodeType);
+
+        $em = \Mockery::mock(EntityManager::class);
+        $em->shouldReceive('getRepository')->once()->with(RestMethodType::class)->andReturn($restMethodRepo);
+
+        $em->shouldReceive('getRepository')->once()->with(RestStatusCodeType::class)->andReturn($restStatusCodeRepo);
+
+        $em->shouldReceive('persist')->once();
+        $em->shouldNotReceive('flush');
+
+        $restLogQuery = \Mockery::mock(RestLogQuery::class);
+        $registry = \Mockery::mock(Registry::class);
+        $registry->shouldReceive('getManager')->once()->andReturn($em);
+
+        $config = [
+            'enable_database_logging' => true,
+        ];
+
+        $response = new PlainResponse(new Response(200, [], ''), 'get', 'url', []);
+
+        $utility = new RestLogUtility($config, $restLogQuery, $registry);
+        $utility->logResponse($response);
+
+        $em->shouldNotReceive('getRepository')->with(RestLog::class);
+
+        $this->assertNotNull($utility->getLogByUuid($response->getUuid()));
     }
 }
