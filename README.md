@@ -1,23 +1,31 @@
-Chaplean Rest-Client-Bundle
-===========================
-[![Codeship Status for chaplean/rest-client-bundle](https://app.codeship.com/projects/3fe51760-76ca-0135-4402-1639b58199d0/status?branch=master)](https://app.codeship.com/projects/244562)
-[![Coverage Status](https://coveralls.io/repos/bitbucket/chaplean/rest-client-bundle/badge.svg?branch=master)](https://coveralls.io/bitbucket/chaplean/rest-client-bundle?branch=master)
+# Chaplean Rest Client Bundle
 
-# Prerequisites
+[![build status](https://git.chaplean.coop/open-source/bundle/rest-client-bundle/badges/master/pipeline.svg)](https://github.com/chaplean/rest-client-bundle)
+[![coverage report](https://git.chaplean.coop/open-source/bundle/rest-client-bundle/badges/master/coverage.svg)](https://github.com/chaplean/rest-client-bundle)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/chaplean/rest-client-bundle/issues)
 
-This version of the bundle requires Symfony 2.8+.
+Library to help defining client for rest apis.
 
-# Installation
+## Table of content
 
-## 1. Composer
+* [Installation](#Installation)
+* [Configuration](#Configuration)
+* [Usage](#Usage)
+* [Versioning](#Versioning)
+* [Contributing](#Contributing)
+* [Hacking](#Hacking)
+* [License](#License)
 
+## Installation
+
+This bundle requires at least Symfony 3.0.
+
+You can use [composer](https://getcomposer.org) to install rest-client-bundle:
 ```bash
 composer require chaplean/rest-client-bundle
 ```
 
-## 2. AppKernel.php
-
-Add
+Then add to your AppKernel.php:
 ```php
 new EightPoints\Bundle\GuzzleBundle\EightPointsGuzzleBundle(),
 new Chaplean\Bundle\RestClientBundle\ChapleanRestClientBundle(),
@@ -30,13 +38,13 @@ new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
 new Symfony\Bundle\TwigBundle\TwigBundle()
 ```
 
-## 3. config.yml and parameters.yml
+## Configuration
 
 First you will need to configure guzzlehttp that we use under the hood to perform the actual http
 requests. See the [bundle](https://github.com/8p/EightPointsGuzzleBundle) documentation or the [library](http://docs.guzzlephp.org/en/latest/request-options.html) documentation for full range
-of options. Example:
+of options.
 
-config.yml
+config.yml:
 ```yaml
 eight_points_guzzle:
     logging: true
@@ -48,7 +56,7 @@ eight_points_guzzle:
 
 You will probably also want to create some custom parameters.
 
-parameters.yml
+parameters.yml:
 ```yaml
 parameters:
     # Guzzle configuration
@@ -85,9 +93,11 @@ chaplean_rest_client:
 You can override the default email content by overriding the translation keys or even the email body twig template.
 The translation keys are under `chaplean_rest_client.email.request_executed_notification` and the template is `Resources/views/Email/request_executed_notification.txt.twig`.
 
-# Usage
+## Usage
 
-## Creating Api class
+The following describes how to use the rest-client-bundle to create your own rest api client. If you want an example of bundles created using this project see our own on [packagist](https://packagist.org/?query=chaplean%2F%20client-bundle) or [github](https://github.com/chaplean?utf8=%E2%9C%93&q=client-bundle&type=&language=).
+
+### Creating Api class
 
 To use rest-client-bundle you have to create a class extending AbstractApi. You can create any number of classes extending AbstractApi and have all of them using different
 configurations via dependency injection.
@@ -108,9 +118,10 @@ class FakeApi extends AbstractApi
      */
     public function __construct(ClientInterface $client, $url)
     {
-        parent::__construct($client);
-
         $this->url = $url;
+
+		// buildApi() is called automatically by the parent constructor, make sure you call it at the END of the construct() function.
+        parent::__construct($client);
     }
 
     /**
@@ -141,7 +152,7 @@ services:
 
 And we're done! We could repeat this process to create another Api with completely different configurations.
 
-## Defining Api
+### Defining Api
 
 Let's focus on the ```buildApi()``` function you have to fill in and what we can do in it.
 The role of this function is to define your Api using rest-client-bundle api:
@@ -237,3 +248,40 @@ public function buildApi()
         );
 }
 ```
+
+## Versioning
+
+rest-client-bundle follows [semantic versioning](https://semver.org/). In short the scheme is MAJOR.MINOR.PATCH where
+1. MAJOR is bumped when there is a breaking change,
+2. MINOR is bumped when a new feature is added in a backward-compatible way,
+3. PATCH is bumped when a bug is fixed in a backward-compatible way.
+
+Versions bellow 1.0.0 are considered experimental and breaking changes may occur at any time.
+
+## Contributing
+
+Contributions are welcomed! There are many ways to contribute, and we appreciate all of them. Here are some of the major ones:
+
+* [Bug Reports](https://github.com/chaplean/rest-client-bundle/issues): While we strive for quality software, bugs can happen and we can't fix issues we're not aware of. So please report even if you're not sure about it or just want to ask a question. If anything the issue might indicate that the documentation can still be improved!
+* [Feature Request](https://github.com/chaplean/rest-client-bundle/issues): You have a use case not covered by the current api? Want to suggest a change or add something? We'd be glad to read about it and start a discussion to try to find the best possible solution.
+* [Pull Request](https://github.com/chaplean/rest-client-bundle/pulls): Want to contribute code or documentation? We'd love that! If you need help to get started, GitHub as [documentation](https://help.github.com/articles/about-pull-requests/) on pull requests. We use the ["fork and pull model"](https://help.github.com/articles/about-collaborative-development-models/) were contributors push changes to their personnal fork and then create pull requests to the main repository. Please make your pull requests against the `master` branch.
+
+As a reminder, all contributors are expected to follow our [Code of Conduct](CODE_OF_CONDUCT).
+
+## Hacking
+
+You might find the following commands usefull when hacking on this project:
+
+```bash
+# Install dependencies
+composer install
+
+# Run tests
+bin/phpunit
+```
+
+## License
+
+rest-client-bundle is distributed under the terms of the MIT license.
+
+See [LICENSE](LICENSE) for details.
