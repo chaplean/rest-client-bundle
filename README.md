@@ -266,7 +266,7 @@ Contributions are welcomed! There are many ways to contribute, and we appreciate
 * [Feature Request](https://github.com/chaplean/rest-client-bundle/issues): You have a use case not covered by the current api? Want to suggest a change or add something? We'd be glad to read about it and start a discussion to try to find the best possible solution.
 * [Pull Request](https://github.com/chaplean/rest-client-bundle/pulls): Want to contribute code or documentation? We'd love that! If you need help to get started, GitHub as [documentation](https://help.github.com/articles/about-pull-requests/) on pull requests. We use the ["fork and pull model"](https://help.github.com/articles/about-collaborative-development-models/) were contributors push changes to their personnal fork and then create pull requests to the main repository. Please make your pull requests against the `master` branch.
 
-As a reminder, all contributors are expected to follow our [Code of Conduct](CODE_OF_CONDUCT).
+As a reminder, all contributors are expected to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Hacking
 
@@ -284,4 +284,4 @@ bin/phpunit
 
 rest-client-bundle is distributed under the terms of the MIT license.
 
-See [LICENSE](LICENSE) for details.
+See [LICENSE](LICENSE.md) for details.
