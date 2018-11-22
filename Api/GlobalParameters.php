@@ -106,7 +106,7 @@ class GlobalParameters
      */
     public function sendFormUrlEncoded()
     {
-        $this->requestType = RequestRoute::REQUEST_FORM_URL_ENCODED;
+        $this->requestType = Route::REQUEST_FORM_URL_ENCODED;
 
         return $this;
     }
@@ -118,7 +118,7 @@ class GlobalParameters
      */
     public function sendJson()
     {
-        $this->requestType = RequestRoute::REQUEST_JSON;
+        $this->requestType = Route::REQUEST_JSON;
 
         return $this;
     }
@@ -130,7 +130,7 @@ class GlobalParameters
      */
     public function sendXml()
     {
-        $this->requestType = RequestRoute::REQUEST_XML;
+        $this->requestType = Route::REQUEST_XML;
 
         return $this;
     }
@@ -143,7 +143,7 @@ class GlobalParameters
      */
     public function sendJSONString()
     {
-        $this->requestType = RequestRoute::REQUEST_JSON_STRING;
+        $this->requestType = Route::REQUEST_JSON_STRING;
 
         return $this;
     }

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class AbstractApi
 {
     /**
-     * @var null|RequestRoute
+     * @var null|Route
      */
     protected $globalRoute = null;
 
@@ -150,7 +150,7 @@ abstract class AbstractApi
      */
     protected function post($name, $url)
     {
-        return $this->addRoute('post', $name, new RequestRoute(Request::METHOD_POST, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
+        return $this->addRoute('post', $name, new Route(Request::METHOD_POST, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
     }
 
     /**
@@ -161,7 +161,7 @@ abstract class AbstractApi
      */
     protected function put($name, $url)
     {
-        return $this->addRoute('put', $name, new RequestRoute(Request::METHOD_PUT, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
+        return $this->addRoute('put', $name, new Route(Request::METHOD_PUT, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
     }
 
     /**
@@ -172,7 +172,7 @@ abstract class AbstractApi
      */
     protected function patch($name, $url)
     {
-        return $this->addRoute('patch', $name, new RequestRoute(Request::METHOD_PATCH, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
+        return $this->addRoute('patch', $name, new Route(Request::METHOD_PATCH, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
     }
 
     /**

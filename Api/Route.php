@@ -33,9 +33,16 @@ class Route
     protected $queryParameters;
     protected $headers;
 
+    protected $requestType;
+    protected $requestParameters;
+
+    const REQUEST_FORM_URL_ENCODED = 'form_params';
+    const REQUEST_JSON = 'json';
+    const REQUEST_JSON_STRING = 'json_string';
+    const REQUEST_XML = 'xml';
     const RESPONSE_BINARY = 'Binary';
-    const RESPONSE_PLAIN = 'Plain';
     const RESPONSE_JSON = 'Json';
+    const RESPONSE_PLAIN = 'Plain';
     const RESPONSE_XML = 'Xml';
 
     static protected $allowedMethods = [
@@ -72,6 +79,9 @@ class Route
         $this->urlParameters = $globalParameters->urlParameters;
         $this->queryParameters = $globalParameters->queryParameters;
         $this->headers = $globalParameters->headers;
+
+        $this->requestType = $globalParameters->requestType;
+        $this->requestParameters = $globalParameters->requestParameters;
 
         $this->bindUrlParameters([]);
         $this->bindQueryParameters([]);
@@ -232,6 +242,56 @@ class Route
     }
 
     /**
+     * Configure the route to send request data as application/x-www-form-urlencoded
+     * (which is the default)
+     *
+     * @return self
+     */
+    public function sendFormUrlEncoded()
+    {
+        $this->requestType = self::REQUEST_FORM_URL_ENCODED;
+
+        return $this;
+    }
+
+    /**
+     * Configure the route to send request data as json
+     *
+     * @return self
+     */
+    public function sendJson()
+    {
+        $this->requestType = self::REQUEST_JSON;
+
+        return $this;
+    }
+
+    /**
+     * Configure the route to send request data as xml
+     *
+     * @return self
+     */
+    public function sendXml()
+    {
+        $this->requestType = self::REQUEST_XML;
+
+        return $this;
+    }
+
+    /**
+     * Configure the route to send request data as a url-encoded key-value pair where the key is JSONString and the
+     * value is the request data in json format
+     *
+     * @return self
+     */
+    public function sendJSONString()
+    {
+        $this->requestType = Route::REQUEST_JSON_STRING;
+
+        return $this;
+    }
+
+    /**
      * @return ResponseInterface
      */
     private function sendRequest()
@@ -290,15 +350,58 @@ class Route
     }
 
     /**
+     * Set request parameters for this route.
+     *
+     * @param array $parameters
+     *
+     * @return $this
+     */
+    public function requestParameters(array $parameters)
+    {
+        $this->requestParameters = Parameter::Object($parameters);
+
+        return $this;
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return $this
+     */
+    public function bindRequestParameters(array $parameters)
+    {
+        $this->requestParameters->setValue($parameters);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function buildRequestParameters()
+    {
+        $requestType = $this->requestType;
+        $requestData = $this->requestParameters->toArray();
+
+        if ($this->requestType === self::REQUEST_JSON_STRING) {
+            $requestType = self::REQUEST_FORM_URL_ENCODED;
+            $requestData = ['JSONString' => json_encode($requestData)];
+        }
+
+        return [$requestType => $requestData];
+    }
+
+    /**
      * @return array
      * @throws ParameterConstraintValidationFailedException
      */
     protected function buildRequestOptions()
     {
-        return [
+        return array_merge([
             'headers' => $this->headers->toArray(),
             'query'   => $this->queryParameters->toArray(),
-        ];
+        ],
+            $this->buildRequestParameters());
     }
 
     /**
@@ -310,6 +413,7 @@ class Route
         $violations->addChild('url', $this->urlParameters->getViolations());
         $violations->addChild('header', $this->headers->getViolations());
         $violations->addChild('query', $this->queryParameters->getViolations());
+        $violations->addChild('request', $this->requestParameters->getViolations());
 
         return $violations;
     }

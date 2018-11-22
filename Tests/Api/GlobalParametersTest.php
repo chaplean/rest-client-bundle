@@ -4,7 +4,7 @@ namespace Tests\Chaplean\Bundle\RestClientBundle\Api;
 
 use Chaplean\Bundle\RestClientBundle\Api\GlobalParameters;
 use Chaplean\Bundle\RestClientBundle\Api\Parameter;
-use Chaplean\Bundle\RestClientBundle\Api\RequestRoute;
+use Chaplean\Bundle\RestClientBundle\Api\Route;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\BinaryResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\JsonResponse;
 use Chaplean\Bundle\RestClientBundle\Api\Response\Success\PlainResponse;
@@ -58,7 +58,7 @@ class GlobalParametersTest extends TestCase
     public function testGlobalParametersConstruct()
     {
         $globalParameter = new GlobalParameters();
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
 
         $this->client->shouldReceive('request')
             ->once()
@@ -80,7 +80,7 @@ class GlobalParametersTest extends TestCase
     {
         $globalParameter = new GlobalParameters();
         $globalParameter->expectsBinary();
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
 
         $this->client->shouldReceive('request')
             ->once()
@@ -102,7 +102,7 @@ class GlobalParametersTest extends TestCase
     {
         $globalParameter = new GlobalParameters();
         $globalParameter->expectsJson();
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
 
         $this->client->shouldReceive('request')
             ->once()
@@ -124,7 +124,7 @@ class GlobalParametersTest extends TestCase
     {
         $globalParameter = new GlobalParameters();
         $globalParameter->expectsXml();
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
 
         $this->client->shouldReceive('request')
             ->once()
@@ -147,7 +147,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->sendJson();
 
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
 
         $this->client->shouldReceive('request')
             ->once()
@@ -170,7 +170,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->sendXml();
 
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
 
         $this->client->shouldReceive('request')
             ->once()
@@ -193,7 +193,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->sendJSONString();
 
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
 
         $this->client->shouldReceive('request')
             ->once()
@@ -216,7 +216,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->urlPrefix('prefix');
 
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
 
         $this->client->shouldReceive('request')
             ->once()
@@ -239,7 +239,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->urlParameters(['id' => Parameter::id()]);
 
-        $route = new RequestRoute('POST', 'url/{id}', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url/{id}', $this->client, $this->eventDispatcher, $globalParameter);
         $route->bindUrlParameters(['id' => 42]);
 
         $this->client->shouldReceive('request')
@@ -263,7 +263,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->queryParameters(['id' => Parameter::id()]);
 
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
         $route->bindQueryParameters(['id' => 42]);
 
         $this->client->shouldReceive('request')
@@ -287,7 +287,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->headers(['id' => Parameter::id()]);
 
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
         $route->bindHeaders(['id' => 42]);
 
         $this->client->shouldReceive('request')
@@ -311,7 +311,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->requestParameters(['id' => Parameter::id()]);
 
-        $route = new RequestRoute('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
         $route->bindRequestParameters(['id' => 42]);
 
         $this->client->shouldReceive('request')
