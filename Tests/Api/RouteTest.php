@@ -36,12 +36,12 @@ class RouteTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var MockInterface
+     * @var MockInterface|Client
      */
     protected $client;
 
     /**
-     * @var EventDispatcherInterface
+     * @var MockInterface|EventDispatcherInterface
      */
     protected $eventDispatcher;
 
@@ -81,7 +81,7 @@ class RouteTest extends TestCase
 
         $this->client->shouldReceive('request')
             ->once()
-            ->with('GET', 'url', ['headers' => [], 'query' => []])
+            ->with('GET', 'url', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
         $route = new Route(Request::METHOD_GET, '/url', $this->client, $this->eventDispatcher, new GlobalParameters());
@@ -104,7 +104,7 @@ class RouteTest extends TestCase
 
         $this->client->shouldReceive('request')
             ->once()
-            ->with('GET', 'url/with/1/and/2/placeholder', ['headers' => [], 'query' => []])
+            ->with('GET', 'url/with/1/and/2/placeholder', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
         $route = new Route(Request::METHOD_GET, 'url/with/{placeholder}/and/{another}/placeholder', $this->client, $this->eventDispatcher, new GlobalParameters());
@@ -129,7 +129,7 @@ class RouteTest extends TestCase
 
         $this->client->shouldReceive('request')
             ->once()
-            ->with('GET', 'url/with/1/and/2.json', ['headers' => [], 'query' => []])
+            ->with('GET', 'url/with/1/and/2.json', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
         $route = new Route(Request::METHOD_GET, 'url/with/{placeholder}/and/{another}.json', $this->client, $this->eventDispatcher, new GlobalParameters());
@@ -186,6 +186,7 @@ class RouteTest extends TestCase
                         'value3' => 3,
                         'value4' => 4,
                     ],
+                    'form_params' => []
                 ]
             )
             ->andReturn(new Response());
@@ -366,7 +367,7 @@ class RouteTest extends TestCase
 
         $this->client->shouldReceive('request')
             ->once()
-            ->with('GET', 'url', ['headers' => [], 'query' => []])
+            ->with('GET', 'url', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
         $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
@@ -388,7 +389,7 @@ class RouteTest extends TestCase
 
         $this->client->shouldReceive('request')
             ->once()
-            ->with('GET', 'url', ['headers' => [], 'query' => []])
+            ->with('GET', 'url', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
         $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
@@ -428,4 +429,188 @@ class RouteTest extends TestCase
 
         $this->assertInstanceOf(AbstractFailureResponse::class, $route->exec());
     }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::requestParameters()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::bindRequestParameters()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::__construct()
+     *
+     * @return void
+     */
+    public function testBuildRequestOptionsWithPostMethod()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with(
+                'POST',
+                'url',
+                [
+                    'headers' => [
+                        'value1' => 1,
+                        'value2' => 2,
+                    ],
+                    'query'   => [
+                        'value3' => 3,
+                        'value4' => 4,
+                    ],
+                    'form_params' => [
+                        'value5' => 5,
+                        'value6' => 6,
+                    ],
+                ]
+            )
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->headers(['value1' => Parameter::int(), 'value2' => Parameter::int()]);
+        $route->queryParameters(['value3' => Parameter::int(), 'value4' => Parameter::int()]);
+        $route->requestParameters(['value5' => Parameter::int(), 'value6' => Parameter::int()]);
+        $route->bindHeaders(['value1' => 1, 'value2' => 2]);
+        $route->bindQueryParameters(['value3' => 3, 'value4' => 4]);
+        $route->bindRequestParameters(['value5' => 5, 'value6' => 6]);
+
+        $route->exec();
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::requestParameters()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::bindRequestParameters()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::sendJson()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::__construct()
+     *
+     * @return void
+     */
+    public function testBuildRequestOptionsJson()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with(
+                'POST',
+                'url',
+                [
+                    'headers' => [],
+                    'query'   => [],
+                    'json'    => [
+                        'value' => 42,
+                    ],
+                ]
+            )
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->requestParameters(['value' => Parameter::int()]);
+        $route->sendJson();
+        $route->bindRequestParameters(['value' => 42]);
+
+        $route->exec();
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::requestParameters()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::bindRequestParameters()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::sendXml()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::__construct()
+     *
+     * @return void
+     */
+    public function testBuildRequestOptionsXml()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with(
+                'POST',
+                'url',
+                [
+                    'headers' => [],
+                    'query'   => [],
+                    'xml'     => [
+                        'value' => 42,
+                    ],
+                ]
+            )
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->requestParameters(['value' => Parameter::int()]);
+        $route->sendXml();
+        $route->bindRequestParameters(['value' => 42]);
+
+        $route->exec();
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::buildRequestParameters()
+     *
+     * @return void
+     */
+    public function testBuildRequestParametersWithJSONString()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with(
+                'POST',
+                'url',
+                [
+                    'headers' => [],
+                    'query'   => [],
+                    'form_params'     => [
+                        'JSONString' => '{"value":42}'
+                    ],
+                ]
+            )
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->requestParameters(['value' => Parameter::int()]);
+        $route->sendJSONString();
+        $route->bindRequestParameters(['value' => 42]);
+
+        $route->exec();
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Route::buildRequestParameters()
+     *
+     * @return void
+     */
+    public function testBuildRequestParametersWithUrlEncoded()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with(
+                'POST',
+                'url',
+                [
+                    'headers' => [],
+                    'query'   => [],
+                    'form_params'     => [
+                        'value' => 42
+                    ],
+                ]
+            )
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->requestParameters(['value' => Parameter::int()]);
+        $route->sendFormUrlEncoded();
+        $route->bindRequestParameters(['value' => 42]);
+
+        $route->exec();
+    }
+
 }
