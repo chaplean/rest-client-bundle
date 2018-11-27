@@ -9,8 +9,12 @@ Library to help defining client for rest apis.
 ## Table of content
 
 * [Installation](#Installation)
-* [Configuration](#Configuration)
-* [Usage](#Usage)
+* [Creating bundles based on rest-client-bundle](#creating-bundles-based-on-rest-client-bundle)
+    * [Configuration](#Configuration)
+    * [Creating an Api class](#creating-an-api-class)
+    * [Defining an Api](#defining-an-api)
+* [Using a bundle based on rest-client-bundle](#using-a-bundle-based-on-rest-client-bundle)
+* [Additional Features](#additional-features)
 * [Versioning](#Versioning)
 * [Contributing](#Contributing)
 * [Hacking](#Hacking)
@@ -38,10 +42,14 @@ new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
 new Symfony\Bundle\TwigBundle\TwigBundle()
 ```
 
-## Configuration
+## Creating bundles based on rest-client-bundle
+
+This section describes how you can create your own api bundle based on this project. If you want examples see our own api bundles on [packagist](https://packagist.org/?query=chaplean%2F%20client-bundle) or [github](https://github.com/chaplean?utf8=%E2%9C%93&q=client-bundle&type=&language=).
+
+### Configuration
 
 First you will need to configure guzzlehttp that we use under the hood to perform the actual http
-requests. See the [bundle](https://github.com/8p/EightPointsGuzzleBundle) documentation or the [library](http://docs.guzzlephp.org/en/latest/request-options.html) documentation for full range
+requests. See the [bundle](https://github.com/8p/EightPointsGuzzleBundle) documentation or the [library](http://docs.guzzlephp.org/en/latest/request-options.html) documentation for the full range
 of options.
 
 config.yml:
@@ -54,7 +62,7 @@ eight_points_guzzle:
             options: %fake_api.options%
 ```
 
-You will probably also want to create some custom parameters.
+You will also probably want to create some custom parameters.
 
 parameters.yml:
 ```yaml
@@ -69,35 +77,9 @@ parameters:
     fake_api.url: 'http://fakeapi.com/'
 ```
 
-As you inject guzzle in your Api class you can have different configuration per Api. See next section.
+As you inject guzzle in your Api class you can have different configuration per Api. See next [section](#creating-api).
 
-Next this bunde expose some configuration if you want to enable extra features. You can enable database and / or email logging of requests.
-To use the database or email loggers you will have to setup respectively [doctrine](https://symfony.com/doc/current/doctrine.html) or [swiftmailer](https://symfony.com/doc/current/email.html) in your project.
-The default configuraton is:
-
-config.yml
-```yaml
-chaplean_rest_client:
-    enable_database_logging: false
-    enable_email_logging: false
-    email_logging:
-        # Limit emails to the specified codes.
-        # You can either use a code directly like 200, 404, …
-        # or use XX to say all codes in the familly like 5XX to say all server errors.
-        # 0 means that the request failed to run (either because of invalid parameters or a networking error)
-        codes_listened: ['0', '1XX', '2XX', '3XX', '4XX', '5XX']
-        address_from: ~
-        address_to:   ~
-```
-
-You can override the default email content by overriding the translation keys or even the email body twig template.
-The translation keys are under `chaplean_rest_client.email.request_executed_notification` and the template is `Resources/views/Email/request_executed_notification.txt.twig`.
-
-## Usage
-
-The following describes how to use the rest-client-bundle to create your own rest api client. If you want an example of bundles created using this project see our own on [packagist](https://packagist.org/?query=chaplean%2F%20client-bundle) or [github](https://github.com/chaplean?utf8=%E2%9C%93&q=client-bundle&type=&language=).
-
-### Creating Api class
+### Creating an Api class
 
 To use rest-client-bundle you have to create a class extending AbstractApi. You can create any number of classes extending AbstractApi and have all of them using different
 configurations via dependency injection.
@@ -120,7 +102,7 @@ class FakeApi extends AbstractApi
     {
         $this->url = $url;
 
-		// buildApi() is called automatically by the parent constructor, make sure you call it at the END of the construct() function.
+        // buildApi() is called automatically by the parent constructor, make sure you call it at the END of the construct() function.
         parent::__construct($client);
     }
 
@@ -152,10 +134,10 @@ services:
 
 And we're done! We could repeat this process to create another Api with completely different configurations.
 
-### Defining Api
+#### Defining an Api
 
 Let's focus on the ```buildApi()``` function you have to fill in and what we can do in it.
-The role of this function is to define your Api using rest-client-bundle api:
+The role of this function is to define your Api using the rest-client-bundle's api:
 
 ```php
 <?php
@@ -177,15 +159,15 @@ public function buildApi()
         ->expectsJson()                  // Declare we expect responses to be json
         ->expectsXml()                   // Declare we expect responses to be xml
 
-        ->sendFormUrlEncoded()           // Configure that we post our data as classic form url encoded  (only apply to post, put and patch requests)
-        ->sendJson()                     // Configure that we post our data as json (only apply to post, put and patch requests)
-        ->sendXml()                      // Configure that we post our data as xml (only apply to post, put and patch requests)
-        ->sendJSONString()               // Configure that we post our data as a url-encoded key-value pair where the key is JSONString and the value is the request data in json format (only apply to post, put and patch requests)
+        ->sendFormUrlEncoded()           // Configure that we post our data as classic form url encoded
+        ->sendJson()                     // Configure that we post our data as json
+        ->sendXml()                      // Configure that we post our data as xml
+        ->sendJSONString()               // Configure that we post our data as a url-encoded key-value pair where the key is JSONString and the value is the request data in json format
 
         ->headers([])                    // Configure what headers we send
         ->urlParameters([])              // Configure what url placeholders we define
         ->queryParameters([])            // Configure what query strings we send
-        ->requestParameters([]);         // Configure what post data we send (only apply to post, put and patch requests)
+        ->requestParameters([]);         // Configure what post data we send
 
     /*
      * Here we define the core of our api, the routes. We can use get(), post(), put(), patch(), delete() functions
@@ -206,15 +188,15 @@ public function buildApi()
         ->expectsJson()                  // Declare we expect responses to be json
         ->expectsXml()                   // Declare we expect responses to be xml
 
-        ->sendFormUrlEncoded()           // Configure that we post our data as classic form url encoded  (only apply to post, put and patch requests)
-        ->sendJson()                     // Configure that we post our data as json (only apply to post, put and patch requests)
-        ->sendXml()                      // Configure that we post our data as xml (only apply to post, put and patch requests)
-        ->sendJSONString()               // Configure that we post our data as a url-encoded key-value pair where the key is JSONString and the value is the request data in json format (only apply to post, put and patch requests)
+        ->sendFormUrlEncoded()           // Configure that we post our data as classic form url encoded
+        ->sendJson()                     // Configure that we post our data as json
+        ->sendXml()                      // Configure that we post our data as xml
+        ->sendJSONString()               // Configure that we post our data as a url-encoded key-value pair where the key is JSONString and the value is the request data in json format
 
         ->headers([])                    // Configure what headers we send
         ->urlParameters([])              // Configure what url placeholders we define
         ->queryParameters([])            // Configure what query strings we send
-        ->requestParameters([]);         // Configure what post data we send (only apply to post, put and patch requests)
+        ->requestParameters([]);         // Configure what post data we send
 
     /*
      * Finally calling headers(), urlParameters(), queryParameters() or requestParameters() without configuring parameters is sort of useless.
@@ -226,7 +208,7 @@ public function buildApi()
                 'id' => Parameter::id(),
             ]
         )
-    /**
+    /*
      * We define a list of key => values pairs where key is the name of the parameter and the value is a parameter type.
      * We can also configure the parameters type. They all support at least optional(), defaultValue().
      */
@@ -248,6 +230,94 @@ public function buildApi()
         );
 }
 ```
+
+## Using a bundle based on rest-client-bundle
+
+This section describes how to use a bundle based rest-client-bundle.
+
+As shown in the previous [section](#defining-an-api) the api defines a list of routes and the parameters they accept. To call a route you need to provide them.
+
+For an api with the following definition:
+
+```php
+class FakeApi
+{
+    ...
+
+    public function buildApi()
+    {
+        $this->get('user', '/user/{id}')
+            ->urlParameters(['id' => Parameter::id()])
+            ->expectsJson()
+    }
+
+    ...
+}
+```
+
+We can call the `getUser()` method, provide the parameters and run the request:
+```php
+$response = $api->getUser()           // the get('user', '/user/{id}') definition added a getUser() method
+    ->bindUrlParameters(['id' => 42]) // we provide a value for the 'id' parameter
+    ->exec();                         // we can now execute the request
+```
+
+Here we called `bindUrlParameters()` to provide values for the parameters defined with `urlParameters()`. Similarly, for parameters defined with `headers()`, `queryParameters()` and `requestParameters()` there is a `bindHeaders()`, `bindQueryParameters()` and `bindRequestParameters()`.
+
+You have to call these functions with a `key => value` array. There is a validation pass during `exec()` before running the request making sure the values you provided match the definitions in the api.
+
+Finally, `exec()` returns a `ResponseInterface`. Several implementations of this interface exist:
+* InvalidParameterResponse: The parameters provided didn't weren't valid;
+* RequestFailedResponse: Request performed but failed (network issue or non 2xx status code);
+* PlainResponse: Request suceeded and route was either defined with `expectsPlain()` or it wasn't specified;
+* JsonResponse: Request suceeded and route was defined with `expectsJson()`;
+* XmlResponse: Request suceeded and route was defined with `expectsXml()`;
+
+Among the functions in `ResponseInterface` here are some usefull ones and how you could use them:
+```php
+if ($response->succeeded()) {                 // Was the response a 2xx?
+    // The request suceeded.
+    $content = $response->getContent();       // Get the body of the response,
+                                              // will be a string for plain text
+                                              // and associative array for json and xml.
+    ...
+} else {
+    $violations = $response->getViolations(); // If the provided parameters were invalid.
+                                              // this will contain the violations.
+    if (!empty($violations)) {
+        // The request failed because of invalid parameters.
+        ...
+    } else {
+        // The request failed due to a network issue or the response was not a 2xx.
+        ...
+    }
+}
+
+```
+
+## Additional Features
+
+This bunde expose some configuration if you want to enable extra features. You can enable database and / or email logging of requests.
+To use the database or email loggers you will have to setup respectively [doctrine](https://symfony.com/doc/current/doctrine.html) or [swiftmailer](https://symfony.com/doc/current/email.html) in your project.
+The default configuraton is:
+
+config.yml
+```yaml
+chaplean_rest_client:
+    enable_database_logging: false
+    enable_email_logging: false
+    email_logging:
+        # Limit emails to the specified codes.
+        # You can either use a code directly like 200, 404, ...
+        # or use XX to say all codes in the familly like 5XX to say all server errors.
+        # 0 means that the request failed to run (either because of invalid parameters or a networking error)
+        codes_listened: ['0', '1XX', '2XX', '3XX', '4XX', '5XX']
+        address_from: ~
+        address_to:   ~
+```
+
+You can override the default email content by overriding the translation keys or even the email body twig template.
+The translation keys are under `chaplean_rest_client.email.request_executed_notification` and the template is `Resources/views/Email/request_executed_notification.txt.twig`.
 
 ## Versioning
 
