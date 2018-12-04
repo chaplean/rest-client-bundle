@@ -1,0 +1,14 @@
+sudo: required
+services:
+    - docker
+
+before_script:
+    - docker-compose up --build -d
+    - docker-compose exec application composer install --prefer-dist --no-interaction
+    - docker-compose exec application chmod -R +x ./bin/
+
+script:
+    - docker-compose exec application phpdbg -qrr ./bin/phpunit --configuration phpunit.xml.dist --colors=never --coverage-html coverage/ --coverage-text
+
+after_script:
+    - docker-compose down
