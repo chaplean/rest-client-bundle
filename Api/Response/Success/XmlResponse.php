@@ -19,6 +19,12 @@ class XmlResponse extends AbstractSuccessResponse
      */
     public function getContent()
     {
-        return json_decode(json_encode(simplexml_load_string($this->body)), true);
+        try {
+            $result = simplexml_load_string($this->body);
+        } catch (\Exception $e) {
+            $result = simplexml_load_string(utf8_encode($this->body));
+        }
+
+        return json_decode(json_encode($result), true);
     }
 }

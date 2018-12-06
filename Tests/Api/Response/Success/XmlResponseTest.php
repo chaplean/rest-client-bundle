@@ -30,7 +30,29 @@ class XmlResponseTest extends TestCase
 
         $this->assertEquals(
             [
-                'value2' => 2,
+                'value2' => 'something with accents éè',
+                'list' => ['element' => [1, 2]],
+                '@attributes' => ['attribute' => 'something']
+            ],
+            $response->getContent()
+        );
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Response\Success\XmlResponse::getContent()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Response\Success\AbstractSuccessResponse::__construct()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Response\Success\AbstractSuccessResponse::getContent()
+     *
+     * @return void
+     */
+    public function testHandlesLatin1()
+    {
+        $body = utf8_decode(file_get_contents(__DIR__ . '/../../../Resources/sample_response.xml'));
+        $response = new XmlResponse(new Response(200, [], $body), 'get', 'url', []);
+
+        $this->assertEquals(
+            [
+                'value2' => 'something with accents éè',
                 'list' => ['element' => [1, 2]],
                 '@attributes' => ['attribute' => 'something']
             ],

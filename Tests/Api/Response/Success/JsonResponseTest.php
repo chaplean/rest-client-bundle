@@ -32,7 +32,29 @@ class JsonResponseTest extends TestCase
             [
                 'value1' => [1, 2],
                 'value2' => 42,
-                'value3' => 'something'
+                'value3' => 'something with accents éè'
+            ],
+            $response->getContent()
+        );
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Response\Success\JsonResponse::getContent()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Response\Success\AbstractSuccessResponse::__construct()
+     * @covers \Chaplean\Bundle\RestClientBundle\Api\Response\Success\AbstractSuccessResponse::getContent()
+     *
+     * @return void
+     */
+    public function testHandlesLatin1()
+    {
+        $body = utf8_decode(file_get_contents(__DIR__ . '/../../../Resources/sample_response.json'));
+        $response = new JsonResponse(new Response(200, [], $body), 'get', 'url', []);
+
+        $this->assertEquals(
+            [
+                'value1' => [1, 2],
+                'value2' => 42,
+                'value3' => 'something with accents éè'
             ],
             $response->getContent()
         );

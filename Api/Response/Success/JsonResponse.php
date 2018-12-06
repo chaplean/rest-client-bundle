@@ -19,6 +19,12 @@ class JsonResponse extends AbstractSuccessResponse
      */
     public function getContent()
     {
-        return json_decode($this->body, true);
+        $result = json_decode($this->body, true);
+
+        if ($result === null) {
+            $result = json_decode(utf8_encode($this->body), true);
+        }
+
+        return $result;
     }
 }
